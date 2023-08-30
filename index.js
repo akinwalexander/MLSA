@@ -1,7 +1,27 @@
-const { addTasks, logTasks } = require('./controller');
+const http = require("http")
+const {todos, showTodos} = require("./controller")
 
-// Add tasks using the addTasks function
-addTasks(['Go Advance', 'Check Again']);
+http.createServer(async function (req, res){
 
-// Log the tasks array using the logTasks function
-logTasks();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+
+    if (req.url === "/todos") {  // adding "/todos" shows all the todo list
+        const todosData = await todos();
+        res.end(JSON.stringify(todosData));
+    } else if (req.url === "/showTodos") {  // adding "/showTodos" to the port shows the first 15 tasks
+        const showTodosData = await showTodos();
+        res.end(showTodosData);
+    } else {
+        res.end("Invalid route");
+    }
+}).listen(8080);
+
+
+
+
+//     res.write(todos);
+//     res.write(showTodos);
+//     res.end()
+
+
+// }).listen(8080)
